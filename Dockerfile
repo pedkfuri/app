@@ -1,0 +1,13 @@
+FROM node:22
+WORKDIR /app
+COPY './dist/tcc.bundle.js' .
+ENV PORT=${PORT} \
+    NODE_ENV=${NODE_ENV} \
+    GITLAB_TOKEN=${GITLAB_TOKEN} \
+    GITLAB_HOST=${GITLAB_HOST} \
+    HOSTNAME=${HOSTNAME} \
+    OLLAMA_API=${OLLAMA_API} \
+    GITHUB_TOKEN=${GITHUB_TOKEN} \
+    WEBHOOK_URL=${WEBHOOK_URL}
+EXPOSE $PORT
+CMD ["node", "tcc.bundle.js"]

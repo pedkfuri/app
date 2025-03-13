@@ -1,0 +1,43 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "TCC Implementation App",
+  "main": "dist/tcc.bundle.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "bundle": "webpack",
+    "docker:login": "docker login",
+    "docker:build": "docker build -t pedkfuri/tcc .",
+    "docker:push": "docker push pedkfuri/tcc:latest",
+    "docker:tag": "docker tag tcc:latest tcc:latest",
+    "docker:compose:build": "docker compose up --build",
+    "docker:compose:up": "docker compose up",
+    "docker:compose:down": "docker compose down"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/pedkfuri-tcc2/app.git"
+  },
+  "author": "pedkfuri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/pedkfuri-tcc2/app/issues"
+  },
+  "homepage": "https://gitlab.com/pedkfuri-tcc2/app#readme",
+  "dependencies": {
+    "@gitbeaker/rest": "^42.1.0",
+    "@octokit/rest": "^21.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "octokit": "^4.1.2",
+    "ollama": "^0.5.14"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-node-externals": "^3.0.0"
+  }
+}
