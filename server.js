@@ -1,20 +1,17 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import express from 'express';
 import cors from 'cors';
 import { gitlabWebhook } from './webhook.js';
-
+import { ENV } from './index.js';
 
 export const httpServer = express();
 
-const HOSTNAME = process.env.HOSTNAME || 'http://localhost';
+const HOSTNAME = ENV.HOSTNAME || 'http://localhost';
 
 httpServer.use(express.json());
 
 export function createHttpServer() {
-  httpServer.listen(process.env.PORT, () => {
-    console.log(`Servidor HTTP iniciado em [${HOSTNAME}:${process.env.PORT}]`);
+  httpServer.listen(ENV.PORT, () => {
+    console.log(`Servidor HTTP iniciado em [${HOSTNAME}:${ENV.PORT}]`);
   });
 }
 
@@ -23,19 +20,19 @@ httpServer.get('/', (req, res) => {
 });
 
 httpServer.post('/webhook', (req, res) => {
-  if (process.env.SERVICE.match('gitlab')) {
+  if (ENV.SERVICE.match('gitlab')) {
     console.log('Triggered Gitlab Webhook');
     const mergeRequestID = req.body.object_attributes.iid || null;
     const projectID = req.body.project.id || null;
     if (!projectID || !mergeRequestID) {
-      res.status(400).send('Event cannot be processed');
+      res.status(422).send('Event cannot be processed');
       return console.log('Event cannot be processed', req.body);
     }
     gitlabWebhook(projectID, mergeRequestID);
     res.status(200).send('Gitlab code fetched and analysed.');
   }
 
-  if (process.env.SERVICE.match('github')) {
+  if (ENV.SERVICE.match('github')) {
     console.log('Triggered Github Webhook');
     // const mergeRequestID = req.body.object_attributes.iid || null;
     // const projectID = req.body.project.id || null;

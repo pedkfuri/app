@@ -1,14 +1,12 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import { Ollama } from 'ollama'
+import { ENV } from '.';
 
-const ollamaAPI = new Ollama({ host: process.env.OLLAMA_API });
+const ollamaAPI = new Ollama({ host: ENV.OLLAMA_API });
 
 export async function requestLLM(prompt) {
   try {
     return await ollamaAPI.generate({
-      model: process.env.OLLAMA_MODEL,
+      model: ENV.OLLAMA_MODEL,
       prompt: prompt,
       stream: false
     });

@@ -1,11 +1,9 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import { Gitlab } from '@gitbeaker/rest';
+import { ENV } from './index.js';
 
 export const gitlabAPI = new Gitlab({
-  token: process.env.GITLAB_TOKEN,
-  host: process.env.GITLAB_HOST
+  token: ENV.GITLAB_TOKEN,
+  host: ENV.GITLAB_HOST
 });
 
 export async function createGitlabWebhook(projectID, webhookUrl) {
@@ -39,7 +37,7 @@ export async function getMergeRequestChanges(projectID, mergeRequestID) {
       showExpanded: true,
       enableSslVerification: false
     });
-    if (response.data.reviewers.some(async reviewer => reviewer.name.match(await getUserId(process.env.WEBHOOK_USERNAME))) && response.data.state.match('opened')) {
+    if (response.data.reviewers.some(async reviewer => reviewer.name.match(await getUserId(ENV.WEBHOOK_USERNAME))) && response.data.state.match('opened')) {
       return response.data.changes;
     } else {
       return null;
