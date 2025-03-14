@@ -12,7 +12,7 @@ export async function createGitlabWebhook(projectID, webhookUrl) {
   try {
     const currentHooks = await gitlabAPI.ProjectHooks.all(projectID);
     
-    const exists = currentHooks.some(currentHook => currentHook.url === webhookUrl);
+    const exists = currentHooks.some(currentHook => currentHook.url.match(webhookUrl));
     if (!exists) {
       const hook = await gitlabAPI.ProjectHooks.add(projectID, webhookUrl, {
         mergeRequestsEvents: true,
@@ -27,6 +27,11 @@ export async function createGitlabWebhook(projectID, webhookUrl) {
   }
 }
 
+export async function getUserId(username) {
+  const users = await gitlabAPI.Users.all({ username });
+  return users.length ? users[0].id : null;
+}
+
 export async function getMergeRequestChanges(projectID, mergeRequestID) {
   try {
     const response = await gitlabAPI.MergeRequests.showChanges(projectID, mergeRequestID, {
@@ -34,8 +39,11 @@ export async function getMergeRequestChanges(projectID, mergeRequestID) {
       showExpanded: true,
       enableSslVerification: false
     });
-    console.log('Merge Request changes fetched: ', response);
-    return response; //.data.changes[0].diff
+    if (response.data.reviewers.some(async reviewer => reviewer.name.match(await getUserId(process.env.WEBHOOK_USERNAME))) && response.data.state.match('opened')) {
+      return response.data.changes;
+    } else {
+      return null;
+    }
   } catch (error) {
     console.error("Error fetching MR changes: ", error);
   }

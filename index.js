@@ -6,8 +6,14 @@ import { createGithubWebhook } from './github.js';
 import { createGitlabWebhook } from './gitlab.js';
 
 createHttpServer();
-//createGitlabWebhook(68005822, process.env.WEBHOOK_URL);
-createGithubWebhook(process.env.WEBHOOK_URL);
+
+if (process.env.SERVICE.match('gitlab')) {
+  createGitlabWebhook(process.env.GITLAB_PROJECT_ID, process.env.WEBHOOK_URL);
+}
+
+if (process.env.SERVICE.match('github')) {
+  createGithubWebhook(process.env.WEBHOOK_URL);
+}
 
 //TODO: check if incoming event on /webhook is an MR being open, if not, return
 //TODO: implement choose strategy (gitlab || github) when /webhook is requested 
@@ -18,5 +24,6 @@ createGithubWebhook(process.env.WEBHOOK_URL);
 //TODO: modularize
 //TODO: unit tests
 //TODO: Linting
+//TODO: document methods parameters, returns
 //TODO: logger + structure log messages and errors
 //TODO: error handling

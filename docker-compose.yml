@@ -15,4 +15,7 @@ services:
       - OLLAMA_MODEL=${OLLAMA_MODEL}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - WEBHOOK_URL=${WEBHOOK_URL}
+      - WEBHOOK_USERNAME=${WEBHOOK_USERNAME}
+      - SERVICE=${SERVICE}
+      - GITLAB_PROJECT_ID=${GITLAB_PROJECT_ID}
     restart: unless-stopped
