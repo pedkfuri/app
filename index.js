@@ -15,3 +15,5 @@ createGitlabWebhook(68005822, process.env.WEBHOOK_URL);
 //TODO: modularize
 //TODO: unit tests
 //TODO: Linting
+//TODO: logger + structure log messages and errors
+//TODO: error handling

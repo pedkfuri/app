@@ -40,3 +40,11 @@ export async function getMergeRequestChanges(projectID, mergeRequestID) {
     console.error("Error fetching MR changes: ", error);
   }
 }
+
+export async function createMergeRequestComment(projectID, mergeRequestID, content) {
+  gitlabAPI.MergeRequestNotes.create(projectID, mergeRequestID, content).then(result => {
+    console.log('Comment created', result);
+  }).catch(error => {
+    console.log('Error creating MR comment', error);
+  });
+}
