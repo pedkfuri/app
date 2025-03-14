@@ -1,7 +1,9 @@
-import { Octokit } from "octokit";
-import { ENV } from './index.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const token = ENV.GITHUB_TOKEN;
+import { Octokit } from "octokit";
+
+const token = process.env.GITHUB_TOKEN;
 export const githubAPI = new Octokit({ auth: token });
 
 export async function createGithubWebhook(webhookUrl) {
