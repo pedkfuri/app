@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { Gitlab } from '@gitbeaker/rest';
+import { logger } from './logger.js';
 
 export const gitlabAPI = new Gitlab({
   token: process.env.GITLAB_TOKEN,
@@ -26,11 +27,11 @@ export async function createGitlabWebhook(projectID, webhookUrl) {
         pushEvents: true,
         enableSslVerification: false
       });
-      return console.log("Webhook created:", hook);
+      return logger.info("Webhook created:", hook);
     }
-    return console.log('Webhook already exists!');
+    return logger.warn('Webhook already exists!');
   } catch (error) {
-    console.error("Error creating webhook:", error);
+    logger.error("Error creating webhook:", error);
   }
 }
 
@@ -65,7 +66,7 @@ export async function getMergeRequestChanges(projectID, mergeRequestID) {
       return null;
     }
   } catch (error) {
-    console.error("Error fetching MR changes: ", error);
+    logger.error("Error fetching MR changes: ", error);
   }
 }
 
@@ -79,8 +80,8 @@ export async function getMergeRequestChanges(projectID, mergeRequestID) {
  */
 export async function createMergeRequestComment(projectID, mergeRequestID, content) {
   gitlabAPI.MergeRequestNotes.create(projectID, mergeRequestID, content).then(result => {
-    console.log('Comment created', result);
+    logger.info('Comment created', result);
   }).catch(error => {
-    console.log('Error creating MR comment', error);
+    logger.error('Error creating MR comment', error);
   });
 }

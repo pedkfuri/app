@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { Ollama } from 'ollama'
+import { Ollama } from 'ollama';
+import { logger } from './logger.js';
 
 const ollamaAPI = new Ollama({ host: process.env.OLLAMA_API });
 
@@ -19,7 +20,7 @@ export async function requestLLM(prompt) {
       stream: false
     });
   } catch (error) {
-    console.error("Error to request to Ollama: ", error);
+    logger.error("Error to request to Ollama: ", error);
     return null;
   }
 }

@@ -1,6 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+import { logger } from './logger.js';
+
 export const ENV = {
   SERVICE: process.env.SERVICE || 'gitlab',
   NODE_ENV: process.env.NODE_ENV || 'local',
@@ -18,10 +20,10 @@ export const ENV = {
 }
 
 if (!ENV.WEBHOOK_URL || !ENV.GITLAB_TOKEN || !ENV.GITLAB_PROJECT_ID || !ENV.GITHUB_TOKEN || !ENV.OLLAMA_API) {
-  console.error('Fill the environment variables correctly');
+  logger.error('Fill the environment variables correctly');
   process.exit();
 } else {
-  console.log('Starting app: ', ENV);
+  logger.info('Starting app: ', ENV);
 }
 
 import { createHttpServer } from './server.js';

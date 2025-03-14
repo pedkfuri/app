@@ -1,6 +1,7 @@
 import { createMergeRequestComment, getMergeRequestChanges } from './gitlab.js';
 import { ENV } from './index.js';
 import { requestLLM } from './ollama.js';
+import { logger } from './logger.js';
 
 /**
  * Handles the GitLab webhook event, processes the merge request changes, 
@@ -19,7 +20,7 @@ export function gitlabWebhook(projectID, mergeRequestID) {
       diffs = `${diffs}\n${index}> ${change.renamed_file}: \n${change.diff}`;
     });
 
-    console.log('Ollama code analysis starting...');
+    logger.info('Ollama code analysis starting...');
     requestLLM(`You are a senior lead engineer who is doing a code review so be careful with words and give ideas, 
       show you want to help. Analyze the code and make a brief (2-5 lines) statement about it, what is good, what should be changed.
       You should answer in ${ENV.OLLAMA_PROMPT_LANGUAGE || 'brazilian portuguese'}

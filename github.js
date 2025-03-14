@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { Octokit } from "octokit";
+import { Octokit } from 'octokit';
+import { logger } from './logger.js';
 
 const token = process.env.GITHUB_TOKEN;
 export const githubAPI = new Octokit({ auth: token });
@@ -21,8 +22,8 @@ export async function createGithubWebhook(webhookUrl) {
       active: true
     });
 
-    console.log("Webhook created:", response.data);
+    logger.info("Webhook created:", response.data);
   } catch (error) {
-    console.error("Error creating webhook:", error);
+    logger.error("Error creating webhook:", error);
   }
 }
