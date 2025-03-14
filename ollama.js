@@ -13,6 +13,6 @@ export async function requestLLM(prompt) {
       stream: false
     });
   } catch (error) {
-    console.error("Erro ao consultar LLM: ", error);
+    console.error("Error to request to Ollama: ", error);
   }
 }

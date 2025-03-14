@@ -21,8 +21,8 @@ export async function createGithubWebhook(webhookUrl) {
       active: true
     });
 
-    console.log("Webhook criado com sucesso:", response.data);
+    console.log("Webhook created:", response.data);
   } catch (error) {
-    console.error("Erro ao criar webhook:", error);
+    console.error("Error creating webhook:", error);
   }
 }
