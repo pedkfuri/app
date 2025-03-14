@@ -13,6 +13,8 @@ createGitlabWebhook(68005822, process.env.WEBHOOK_URL);
 //TODO: implement choose strategy (gitlab || github) when /webhook is requested 
 //TODO: choose service when first running (app args = gitlab || github)
 //TODO: receber o ID de projeto como variavel de ambiente ao executar container/app
+//TODO: choose prompt to ask to LLM 
+//TODO: define which model will analyze the code
 //TODO: modularize
 //TODO: unit tests
 //TODO: Linting

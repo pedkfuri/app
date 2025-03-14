@@ -31,7 +31,7 @@ httpServer.post('/webhook', (req, res) => {
     response.data.changes.forEach((change, index) => {
       diffs = `${diffs}\n${index}> ${change.renamed_file}: \n${change.diff}`;
     });
-    requestLLM(`Analise os seguintes arquivos diff e faça um breve comentário de 2 linhas sobre todas as mudanças: ${diffs}`).then(llmOutput => {
+    requestLLM(`Analyze the code and make a brief (2-5 lines) statement about the code. You are a senior lead engineer who is doing a code review so be careful with words and give ideas, show you want to help. Here is the diff content: ${diffs}`).then(llmOutput => {
       createMergeRequestComment(projectID, mergeRequestID, llmOutput.response);
       res.status(200).send('Code fetched and analysed.');
     });
