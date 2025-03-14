@@ -8,10 +8,10 @@
     "dev": "nodemon index.js",
     "bundle": "webpack",
     "docker:login": "docker login",
-    "docker:build": "docker build -t pedkfuri/tcc .",
+    "docker:build": "npm run bundle && docker build -t pedkfuri/tcc .",
     "docker:push": "docker push pedkfuri/tcc:latest",
     "docker:tag": "docker tag tcc:latest tcc:latest",
-    "docker:compose:build": "docker compose up --build",
+    "docker:compose:build": "npm run bundle && docker compose up --build",
     "docker:compose:up": "docker compose up",
     "docker:compose:down": "docker compose down"
   },
