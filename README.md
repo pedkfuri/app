@@ -26,5 +26,7 @@ OLLAMA_API=192.168.15.34:11434
 
 OLLAMA_MODEL=codellama
 
+OLLAMA_PROMPT_LANGUAGE=portuguese
+
 
 ```ngrok http <port>```

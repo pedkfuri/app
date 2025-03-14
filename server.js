@@ -3,8 +3,8 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
-import { createMergeRequestComment, getMergeRequestChanges, gitlabAPI } from './gitlab.js';
-import { requestLLM } from './ollama.js';
+import { gitlabWebhook } from './webhook.js';
+
 
 export const httpServer = express();
 
@@ -23,24 +23,29 @@ httpServer.get('/', (req, res) => {
 });
 
 httpServer.post('/webhook', (req, res) => {
-  const mergeRequestID = req.body.object_attributes.iid;
-  const projectID = req.body.project.id;
-  if (!projectID || !mergeRequestID) {
-    res.status(400).send('Event cannot be processed');
-    return console.log('Event cannot be processed');
+  if (process.env.SERVICE.match('gitlab')) {
+    console.log('Triggered Gitlab Webhook');
+    const mergeRequestID = req.body.object_attributes.iid || null;
+    const projectID = req.body.project.id || null;
+    if (!projectID || !mergeRequestID) {
+      res.status(400).send('Event cannot be processed');
+      return console.log('Event cannot be processed', req.body);
+    }
+    gitlabWebhook(projectID, mergeRequestID);
+    res.status(200).send('Gitlab code fetched and analysed.');
   }
-  getMergeRequestChanges(projectID, mergeRequestID).then(async (changes) => {
-    if (!changes || changes.length < 1) return console.log(`MR event not assigned to ${process.env.WEBHOOK_USERNAME} or in unprocessable state`);
-    let diffs = '';
-    changes.forEach((change, index) => {
-      diffs = `${diffs}\n${index}> ${change.renamed_file}: \n${change.diff}`;
-    });
-    console.log('Ollama code analysis starting...');
-    requestLLM(`You are a senior lead engineer who is doing a code review so be careful with words and give ideas, show you want to help. Analyze the code and make a brief (2-5 lines) statement about it, what is good, what should be changed. Here is the diff content: ${diffs}`).then(llmOutput => {
-      createMergeRequestComment(projectID, mergeRequestID, llmOutput.response);
-      res.status(200).send('Code fetched and analysed.');
-    });
-  });
+
+  if (process.env.SERVICE.match('github')) {
+    console.log('Triggered Github Webhook');
+    // const mergeRequestID = req.body.object_attributes.iid || null;
+    // const projectID = req.body.project.id || null;
+    // if (!projectID || !mergeRequestID) {
+    //   res.status(400).send('Event cannot be processed');
+    //   return console.log('Event cannot be processed', req.body);
+    // }
+    // gitlabWebhook(projectID, mergeRequestID);
+  }
+
 });
 
 httpServer.use(cors({
