@@ -39,6 +39,5 @@ if (process.env.SERVICE.match('github')) {
 }
 
 //TODO: unit tests
-//TODO: document methods parameters, returns
 //TODO: logger + structure log messages and errors
 //TODO: error handling

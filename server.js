@@ -12,6 +12,11 @@ const HOSTNAME = process.env.HOSTNAME || 'http://localhost';
 
 httpServer.use(express.json());
 
+/**
+ * Starts an HTTP server and listens on the specified port.
+ *
+ * @returns {void} - Logs a message when the server starts.
+ */
 export function createHttpServer() {
   httpServer.listen(process.env.PORT, () => {
     console.log(`Servidor HTTP iniciado em [${HOSTNAME}:${process.env.PORT}]`);
