@@ -12,6 +12,7 @@ services:
       - GITLAB_HOST=${GITLAB_HOST}
       - HOSTNAME=${HOSTNAME}
       - OLLAMA_API=${OLLAMA_API}
+      - OLLAMA_MODEL=${OLLAMA_MODEL}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - WEBHOOK_URL=${WEBHOOK_URL}
     restart: unless-stopped

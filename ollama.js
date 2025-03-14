@@ -8,7 +8,7 @@ const ollamaAPI = new Ollama({ host: process.env.OLLAMA_API });
 export async function requestLLM(prompt) {
   try {
     return await ollamaAPI.generate({
-      model: 'llama3.2',
+      model: process.env.OLLAMA_MODEL,
       prompt: prompt,
       stream: false
     });
