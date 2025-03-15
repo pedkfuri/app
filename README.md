@@ -1,4 +1,4 @@
-# Prove of Technology
+# TCC App
 
 ## .env
 

@@ -1,5 +1,5 @@
 import { createMergeRequestComment, getMergeRequestChanges } from './gitlab.js';
-import { getPullRequestDiffContent } from './github.js';
+import { createPullRequestComment, getPullRequestDiffContent } from './github.js';
 import { ENV } from './index.js';
 import { requestLLM } from './ollama.js';
 import { logger } from './logger.js';
@@ -42,9 +42,10 @@ export async function githubWebhook(prNumber) {
       fullPatches.concat(`\n${index}> ${patchContent.patch}\n`);
     });
     logger.info('Ollama code analysis starting...');
-    requestLLM(fullPatches).then(llmOutput => {
-      //createMergeRequestComment(projectID, mergeRequestID, llmOutput.response);
+    requestLLM(fullPatches).then(async (llmOutput) => {
       logger.info(llmOutput.response);
+      await createPullRequestComment(prNumber, llmOutput.response);
     });
+    
   });
 }

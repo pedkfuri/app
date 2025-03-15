@@ -46,3 +46,17 @@ export async function getPullRequestDiffContent(prNumber) {
     logger.error("Error fetching diff content:", error);
   }
 }
+
+export async function createPullRequestComment(prNumber, content) {
+  await githubAPI.rest.pulls.createReview({
+    owner: process.env.GITHUB_OWNER,
+    repo: process.env.GITHUB_REPO,
+    pull_number: prNumber,
+    event: "COMMENT",
+    body: content
+  }).then(result => {
+    logger.info('Comment created', result);
+  }).catch(error => {
+    logger.error('Error creating PR comment', error);
+  });
+}

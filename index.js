@@ -42,4 +42,3 @@ if (process.env.SERVICE.match('github')) {
 
 //TODO: unit tests
 //TODO: error handling
-//TODO: implement github comment creation

@@ -42,7 +42,7 @@ httpServer.post('/webhook', (req, res) => {
 
   if (process.env.SERVICE.match('github')) {
     logger.info('Triggered Github Webhook', req.body);
-    const prNumber = req.body.number;
+    const prNumber = req.body.number || null; 
     if (!prNumber) {
       res.status(422).send('Event cannot be processed');
       return logger.error('Event cannot be processed', req.body);
