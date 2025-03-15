@@ -4,26 +4,45 @@ dotenv.config();
 import { Octokit } from 'octokit';
 import { logger } from './logger.js';
 
-const token = process.env.GITHUB_TOKEN;
-export const githubAPI = new Octokit({ auth: token });
+export const githubAPI = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
+/**
+ * Creates a webhook in the specified GitHub repository to listen for pull request events.
+ *
+ * @param {string} webhookUrl - The URL that will receive the webhook payloads.
+ * @returns {Promise<void>} A promise that resolves when the webhook is successfully created.
+ */
 export async function createGithubWebhook(webhookUrl) {
-  try {
-    const response = await githubAPI.rest.repos.createWebhook({
-      owner: "pedkfuri",
-      repo: "career",
-      config: {
-        url: webhookUrl, 
-        content_type: "json",
-        //secret: "segredo",
-        insecure_ssl: "1"
-      },
-      events: ["push", "pull_request"],
-      active: true
-    });
+  await githubAPI.rest.repos.createWebhook({
+    owner: 'pedkfuri',
+    repo: process.env.GITHUB_REPO,
+    config: {
+      url: webhookUrl, 
+      content_type: 'json',
+      insecure_ssl: '0',
+      secret: 'tcc_app'
+    },
+    events: ["pull_request"],
+    active: true
+  }).then(webhookResponse => {
+    logger.info("Webhook created:", webhookResponse);
+  }).catch(error => logger.error("Error creating webhook:", error));
+}
 
-    logger.info("Webhook created:", response.data);
+/**
+ * Retrieves the list of files changed in a specific pull request.
+ *
+ * @param {number} prNumber - The number of the pull request.
+ * @returns {Promise<Object[]>} A promise that resolves to an array of objects representing the modified files.
+ */
+export async function getPullRequestDiffContent(prNumber) {
+  try {
+    return await githubAPI.rest.pulls.listFiles({
+      owner: process.env.GITHUB_OWNER,
+      repo: process.env.GITHUB_REPO,
+      pull_number: prNumber
+    });
   } catch (error) {
-    logger.error("Error creating webhook:", error);
+    logger.error("Error fetching diff content:", error);
   }
 }

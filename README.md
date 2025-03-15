@@ -28,5 +28,9 @@ OLLAMA_MODEL=codellama
 
 OLLAMA_PROMPT_LANGUAGE=portuguese
 
+GITHUB_REPO=sample-repo
+
+GITHUB_OWNER=pedkfuri
+
 
 ```ngrok http <port>```

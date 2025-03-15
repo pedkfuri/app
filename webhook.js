@@ -1,4 +1,5 @@
 import { createMergeRequestComment, getMergeRequestChanges } from './gitlab.js';
+import { getPullRequestDiffContent } from './github.js';
 import { ENV } from './index.js';
 import { requestLLM } from './ollama.js';
 import { logger } from './logger.js';
@@ -21,11 +22,29 @@ export function gitlabWebhook(projectID, mergeRequestID) {
     });
 
     logger.info('Ollama code analysis starting...');
-    requestLLM(`You are a senior lead engineer who is doing a code review so be careful with words and give ideas, 
-      show you want to help. Analyze the code and make a brief (2-5 lines) statement about it, what is good, what should be changed.
-      You should answer in ${ENV.OLLAMA_PROMPT_LANGUAGE || 'brazilian portuguese'}
-      Here is the diff content: ${diffs}.`).then(llmOutput => {
+    requestLLM(diffs).then(llmOutput => {
       createMergeRequestComment(projectID, mergeRequestID, llmOutput.response);
+    });
+  });
+}
+
+/**
+ * Handles the Github webhook event, processes the pull request changes, 
+ * and requests a code review from the LLM.
+ *
+ * @param {number|string} prNumber - The pull request number to fetch diff content for.
+ * @returns {Promise<void>} - Logs the results and triggers actions for code analysis.
+ */
+export async function githubWebhook(prNumber) {
+  await getPullRequestDiffContent(prNumber).then(response => {
+    let fullPatches = '';
+    response.data.forEach((patchContent, index) => {
+      fullPatches.concat(`\n${index}> ${patchContent.patch}\n`);
+    });
+    logger.info('Ollama code analysis starting...');
+    requestLLM(fullPatches).then(llmOutput => {
+      //createMergeRequestComment(projectID, mergeRequestID, llmOutput.response);
+      logger.info(llmOutput.response);
     });
   });
 }
