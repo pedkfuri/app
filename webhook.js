@@ -39,8 +39,9 @@ export async function githubWebhook(prNumber) {
   await getPullRequestDiffContent(prNumber).then(response => {
     let fullPatches = '';
     response.data.forEach((patchContent, index) => {
-      fullPatches.concat(`\n${index}> ${patchContent.patch}\n`);
+      fullPatches += `\nDiff ${index}: ${patchContent.patch}\n`;
     });
+    console.log('fullPatches', fullPatches)
     logger.info('Ollama code analysis starting...');
     requestLLM(fullPatches).then(async (llmOutput) => {
       logger.info(llmOutput.response);
