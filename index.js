@@ -13,17 +13,33 @@ export const ENV = {
   GITLAB_TOKEN: process.env.GITLAB_TOKEN, 
   GITLAB_HOST: process.env.GITLAB_HOST || 'gitlab.com',
   GITLAB_PROJECT_ID: process.env.GITLAB_PROJECT_ID,
-  GITHUB_TOKEN: process.env.GITHUB_TOKEN,
   OLLAMA_API: process.env.OLLAMA_API,
   OLLAMA_MODEL: process.env.OLLAMA_MODEL || 'codellama',
-  OLLAMA_PROMPT_LANGUAGE: process.env.OLLAMA_PROMPT_LANGUAGE || 'portuguese'
+  OLLAMA_PROMPT_LANGUAGE: process.env.OLLAMA_PROMPT_LANGUAGE || 'portuguese',
+  GITHUB_REPO: process.env.GITHUB_REPO,
+  GITHUB_OWNER: process.env.GITHUB_OWNER,
+  GITHUB_TOKEN: process.env.GITHUB_TOKEN,
 }
 
-if (!ENV.WEBHOOK_URL || !ENV.GITLAB_TOKEN || !ENV.GITLAB_PROJECT_ID || !ENV.GITHUB_TOKEN || !ENV.OLLAMA_API || !ENV.SERVICE) {
+if (ENV.SERVICE && ENV.SERVICE === 'gitlab') {
+  if (!ENV.GITLAB_HOST || !ENV.GITLAB_PROJECT_ID || !ENV.GITLAB_TOKEN) {
+    logger.error('Fill the environment variables correctly');
+    process.exit();
+  }
+}
+
+if (ENV.SERVICE && ENV.SERVICE === 'github') {
+  if (!ENV.GITHUB_OWNER || !ENV.GITHUB_REPO || !ENV.GITHUB_TOKEN) {
+    logger.error('Fill the environment variables correctly');
+    process.exit();
+  }
+}
+
+if (!ENV.WEBHOOK_URL || !ENV.OLLAMA_API || !ENV.SERVICE) {
   logger.error('Fill the environment variables correctly');
   process.exit();
 } else {
-  logger.info('Starting app: ', ENV);
+  logger.info(`Starting app: `, ENV);
 }
 
 import { createHttpServer } from './server.js';
