@@ -22,12 +22,12 @@ export async function createGitlabWebhook(projectID, webhookUrl) {
     
     const exists = currentHooks.some(currentHook => currentHook.url.match(webhookUrl));
     if (!exists) {
-      const hook = await gitlabAPI.ProjectHooks.add(projectID, webhookUrl, {
+      await gitlabAPI.ProjectHooks.add(projectID, webhookUrl, {
         mergeRequestsEvents: true,
         pushEvents: true,
         enableSslVerification: false
       });
-      return logger.info("Webhook created:", hook);
+      return logger.info("Webhook created");
     }
     return logger.warn('Webhook already exists!');
   } catch (error) {
@@ -79,8 +79,8 @@ export async function getMergeRequestChanges(projectID, mergeRequestID) {
  * @returns {Promise<void>} - Logs the result of the comment creation.
  */
 export async function createMergeRequestComment(projectID, mergeRequestID, content) {
-  gitlabAPI.MergeRequestNotes.create(projectID, mergeRequestID, content).then(result => {
-    logger.info('Comment created', result);
+  gitlabAPI.MergeRequestNotes.create(projectID, mergeRequestID, content).then(() => {
+    logger.info('Comment created');
   }).catch(error => {
     logger.error('Error creating MR comment', error);
   });

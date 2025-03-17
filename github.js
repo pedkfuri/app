@@ -24,8 +24,8 @@ export async function createGithubWebhook(webhookUrl) {
     },
     events: ["pull_request"],
     active: true
-  }).then(webhookResponse => {
-    logger.info("Webhook created:", webhookResponse);
+  }).then(() => {
+    logger.info("Webhook created.");
   }).catch(error => logger.error("Error creating webhook:", error));
 }
 
@@ -54,8 +54,8 @@ export async function createPullRequestComment(prNumber, content) {
     pull_number: prNumber,
     event: "COMMENT",
     body: content
-  }).then(result => {
-    logger.info('Comment created', result);
+  }).then(() => {
+    logger.info('Comment created');
   }).catch(error => {
     logger.error('Error creating PR comment', error);
   });

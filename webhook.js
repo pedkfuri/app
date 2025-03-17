@@ -14,7 +14,7 @@ import { logger } from './logger.js';
  */
 export function gitlabWebhook(projectID, mergeRequestID) {
   getMergeRequestChanges(projectID, mergeRequestID).then(async (changes) => {
-    if (!changes || changes.length < 1) return console.log(`MR event not assigned to ${ENV.WEBHOOK_USERNAME} or in unprocessable state`);
+    if (!changes || changes.length < 1) return logger.error(`MR event not assigned to ${ENV.WEBHOOK_USERNAME} or in unprocessable state`);
     let diffs = '';
 
     changes.forEach((change, index) => {
@@ -41,10 +41,8 @@ export async function githubWebhook(prNumber) {
     response.data.forEach((patchContent, index) => {
       fullPatches += `\nDiff ${index}: ${patchContent.patch}\n`;
     });
-    console.log('fullPatches', fullPatches)
     logger.info('Ollama code analysis starting...');
     requestLLM(fullPatches).then(async (llmOutput) => {
-      logger.info(llmOutput.response);
       await createPullRequestComment(prNumber, llmOutput.response);
     });
     

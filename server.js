@@ -41,11 +41,13 @@ httpServer.post('/webhook', (req, res) => {
   }
 
   if (process.env.SERVICE.match('github')) {
-    logger.info('Triggered Github Webhook', req.body);
-    const prNumber = req.body.number || null; 
-    if (!prNumber) {
+    logger.info('Triggered Github Webhook');
+    const prState = req.body.pull_request.state;
+    const prNumber = req.body.number || null;
+    if (!prState || !prNumber || prState !== 'open') {
       res.status(422).send('Event cannot be processed');
-      return logger.error('Event cannot be processed', req.body);
+      // logger.error(req.body);
+      return logger.error('Event cannot be processed');
     }
     githubWebhook(prNumber);
     res.status(200).send('Webhook event processed.');
