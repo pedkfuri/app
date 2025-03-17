@@ -1,14 +1,12 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import express from 'express';
 import cors from 'cors';
 import { gitlabWebhook, githubWebhook } from './webhook.js';
 import { logger } from './logger.js';
+import { ENV } from './constants.js';
 
 export const httpServer = express();
 
-const HOSTNAME = process.env.HOSTNAME || 'http://localhost';
+const HOSTNAME = ENV().HOSTNAME || 'http://localhost';
 
 httpServer.use(express.json());
 
@@ -18,8 +16,8 @@ httpServer.use(express.json());
  * @returns {void} - Logs a message when the server starts.
  */
 export function createHttpServer() {
-  httpServer.listen(process.env.PORT, () => {
-    logger.info(`HTTP Server started @ ${HOSTNAME}:${process.env.PORT}`);
+  httpServer.listen(ENV().PORT, () => {
+    logger.info(`HTTP Server started @ ${HOSTNAME}:${ENV().PORT}`);
   });
 }
 
@@ -28,7 +26,7 @@ httpServer.get('/', (req, res) => {
 });
 
 httpServer.post('/webhook', (req, res) => {
-  if (process.env.SERVICE.match('gitlab')) {
+  if (ENV().SERVICE.match('gitlab')) {
     logger.info('Triggered Gitlab Webhook');
     const mergeRequestID = req.body.object_attributes.iid || null;
     const projectID = req.body.project.id || null;
@@ -40,7 +38,7 @@ httpServer.post('/webhook', (req, res) => {
     res.status(200).send('Gitlab code fetched and analysed.');
   }
 
-  if (process.env.SERVICE.match('github')) {
+  if (ENV().SERVICE.match('github')) {
     logger.info('Triggered Github Webhook');
     
     if (!req.body.pull_request || !req.body.number) {

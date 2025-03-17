@@ -1,10 +1,8 @@
-import dotenv from 'dotenv';
-dotenv.config();
-
 import { Octokit } from 'octokit';
 import { logger } from './logger.js';
+import { ENV } from './constants.js';
 
-export const githubAPI = new Octokit({ auth: process.env.GITHUB_TOKEN });
+const githubAPI = new Octokit({ auth: ENV().GITHUB_TOKEN });
 
 /**
  * Creates a webhook in the specified GitHub repository to listen for pull request events.
@@ -14,8 +12,8 @@ export const githubAPI = new Octokit({ auth: process.env.GITHUB_TOKEN });
  */
 export async function createGithubWebhook(webhookUrl) {
   await githubAPI.rest.repos.createWebhook({
-    owner: process.env.GITHUB_OWNER,
-    repo: process.env.GITHUB_REPO,
+    owner: ENV().GITHUB_OWNER,
+    repo: ENV().GITHUB_REPO,
     config: {
       url: webhookUrl, 
       content_type: 'json',
@@ -38,8 +36,8 @@ export async function createGithubWebhook(webhookUrl) {
 export async function getPullRequestDiffContent(prNumber) {
   try {
     return await githubAPI.rest.pulls.listFiles({
-      owner: process.env.GITHUB_OWNER,
-      repo: process.env.GITHUB_REPO,
+      owner: ENV().GITHUB_OWNER,
+      repo: ENV().GITHUB_REPO,
       pull_number: prNumber
     });
   } catch (error) {
@@ -56,8 +54,8 @@ export async function getPullRequestDiffContent(prNumber) {
  */
 export async function createPullRequestComment(prNumber, content) {
   await githubAPI.rest.pulls.createReview({
-    owner: process.env.GITHUB_OWNER,
-    repo: process.env.GITHUB_REPO,
+    owner: ENV().GITHUB_OWNER,
+    repo: ENV().GITHUB_REPO,
     pull_number: prNumber,
     event: "COMMENT",
     body: content
