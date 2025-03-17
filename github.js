@@ -47,6 +47,13 @@ export async function getPullRequestDiffContent(prNumber) {
   }
 }
 
+/**
+ * Creates a comment on a pull request using the GitHub API.
+ *
+ * @param {number} prNumber - The number of the pull request to comment on.
+ * @param {string} content - The content of the comment.
+ * @returns {Promise<void>} A promise that resolves when the comment is successfully created.
+ */
 export async function createPullRequestComment(prNumber, content) {
   await githubAPI.rest.pulls.createReview({
     owner: process.env.GITHUB_OWNER,
