@@ -1,6 +1,6 @@
 import { createMergeRequestComment, getMergeRequestChanges } from './gitlab.js';
 import { createPullRequestComment, getPullRequestDiffContent } from './github.js';
-import { ENV } from './constants.js';
+import { WEBHOOK_USERNAME } from './constants.js';
 import { requestLLM } from './ollama.js';
 import { logger } from './logger.js';
 
@@ -14,7 +14,7 @@ import { logger } from './logger.js';
  */
 export function gitlabWebhook(projectID, mergeRequestID) {
   getMergeRequestChanges(projectID, mergeRequestID).then(async (changes) => {
-    if (!changes || changes.length < 1) return logger.error(`MR event not assigned to ${ENV().WEBHOOK_USERNAME} or in unprocessable state`);
+    if (!changes || changes.length < 1) return logger.error(`MR event not assigned to ${WEBHOOK_USERNAME} or in unprocessable state`);
     let diffs = '';
 
     changes.forEach((change, index) => {

@@ -1,25 +1,35 @@
 import { logger } from './logger.js';
-import { ENV } from './constants.js';
+import { env, 
+  SERVICE, 
+  GITLAB_PROJECT_ID, 
+  GITLAB_HOST, 
+  GITLAB_TOKEN, 
+  GITHUB_OWNER, 
+  GITHUB_REPO, 
+  GITHUB_TOKEN, 
+  WEBHOOK_URL, 
+  OLLAMA_API 
+} from './constants.js';
 
-if (ENV().SERVICE && ENV().SERVICE === 'gitlab') {
-  if (!ENV().GITLAB_HOST || !ENV().GITLAB_PROJECT_ID || !ENV().GITLAB_TOKEN) {
+if (SERVICE && SERVICE === 'gitlab') {
+  if (!GITLAB_HOST || !GITLAB_PROJECT_ID || !GITLAB_TOKEN) {
     logger.error('Fill the environment variables correctly');
     process.exit();
   }
 }
 
-if (ENV().SERVICE && ENV().SERVICE === 'github') {
-  if (!ENV().GITHUB_OWNER || !ENV().GITHUB_REPO || !ENV().GITHUB_TOKEN) {
+if (SERVICE && SERVICE === 'github') {
+  if (!GITHUB_OWNER || !GITHUB_REPO || !GITHUB_TOKEN) {
     logger.error('Fill the environment variables correctly');
     process.exit();
   }
 }
 
-if (!ENV().WEBHOOK_URL || !ENV().OLLAMA_API || !ENV().SERVICE) {
+if (!WEBHOOK_URL || !OLLAMA_API || !SERVICE) {
   logger.error('Fill the environment variables correctly');
   process.exit();
 } else {
-  logger.info(`Starting app: `, ENV());
+  logger.info(`Starting app: `, env());
 }
 
 import { createHttpServer } from './server.js';
@@ -28,12 +38,12 @@ import { createGitlabWebhook } from './gitlab.js';
 
 createHttpServer();
 
-if (ENV().SERVICE.match('gitlab')) {
-  createGitlabWebhook(ENV().GITLAB_PROJECT_ID, ENV().WEBHOOK_URL);
+if (SERVICE.match('gitlab')) {
+  createGitlabWebhook(GITLAB_PROJECT_ID, WEBHOOK_URL);
 }
 
-if (ENV().SERVICE.match('github')) {
-  createGithubWebhook(ENV().WEBHOOK_URL);
+if (SERVICE.match('github')) {
+  createGithubWebhook(WEBHOOK_URL);
 }
 
 //TODO: unit tests

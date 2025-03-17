@@ -1,10 +1,10 @@
-import { ENV } from './constants.js';
+import { GITLAB_HOST, GITLAB_TOKEN, WEBHOOK_USERNAME } from './constants.js';
 import { Gitlab } from '@gitbeaker/rest';
 import { logger } from './logger.js';
 
 const gitlabAPI = new Gitlab({
-  token: ENV().GITLAB_TOKEN,
-  host: ENV().GITLAB_HOST,
+  token: GITLAB_TOKEN,
+  host: GITLAB_HOST,
 });
 
 /**
@@ -58,7 +58,7 @@ export async function getMergeRequestChanges(projectID, mergeRequestID) {
       showExpanded: true,
       enableSslVerification: false
     });
-    if (response.data.reviewers.some(async reviewer => reviewer.name.match(await getUserId(ENV().WEBHOOK_USERNAME))) && response.data.state.match('opened')) {
+    if (response.data.reviewers.some(async reviewer => reviewer.name.match(await getUserId(WEBHOOK_USERNAME))) && response.data.state.match('opened')) {
       return response.data.changes;
     } else {
       return null;
