@@ -17,7 +17,9 @@ export const GITHUB_REPO = process.env.GITHUB_REPO;
 export const GITHUB_OWNER = process.env.GITHUB_OWNER;
 export const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 
-export function env() {
+import { logger } from './logger.js';
+
+function env() {
   return {
     SERVICE,
     NODE_ENV,
@@ -34,5 +36,28 @@ export function env() {
     GITHUB_REPO,
     GITHUB_OWNER,
     GITHUB_TOKEN
+  }
+}
+
+export function assertVariablesValues() {
+  if (SERVICE && SERVICE === 'gitlab') {
+    if (!GITLAB_HOST || !GITLAB_PROJECT_ID || !GITLAB_TOKEN) {
+      logger.error('Fill the environment variables correctly');
+      process.exit();
+    }
+  }
+  
+  if (SERVICE && SERVICE === 'github') {
+    if (!GITHUB_OWNER || !GITHUB_REPO || !GITHUB_TOKEN) {
+      logger.error('Fill the environment variables correctly');
+      process.exit();
+    }
+  }
+  
+  if (!WEBHOOK_URL || !OLLAMA_API || !SERVICE) {
+    logger.error('Fill the environment variables correctly');
+    process.exit();
+  } else {
+    logger.info(`Starting app: `, env());
   }
 }
