@@ -14,13 +14,13 @@ export const githubAPI = new Octokit({ auth: process.env.GITHUB_TOKEN });
  */
 export async function createGithubWebhook(webhookUrl) {
   await githubAPI.rest.repos.createWebhook({
-    owner: 'pedkfuri',
+    owner: process.env.GITHUB_OWNER,
     repo: process.env.GITHUB_REPO,
     config: {
       url: webhookUrl, 
       content_type: 'json',
       insecure_ssl: '0',
-      secret: 'tcc_app'
+      secret: 'webhook_app'
     },
     events: ["pull_request"],
     active: true
