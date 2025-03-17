@@ -20,7 +20,7 @@ export const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 import { logger } from './logger.js';
 
 function env() {
-  return {
+  if (SERVICE === 'gitlab') return {
     SERVICE,
     NODE_ENV,
     PORT,
@@ -30,6 +30,17 @@ function env() {
     GITLAB_TOKEN,
     GITLAB_HOST,
     GITLAB_PROJECT_ID,
+    OLLAMA_API,
+    OLLAMA_MODEL,
+    OLLAMA_PROMPT_LANGUAGE
+  }
+  if (SERVICE === 'github') return {
+    SERVICE,
+    NODE_ENV,
+    PORT,
+    HOSTNAME,
+    WEBHOOK_USERNAME,
+    WEBHOOK_URL,
     OLLAMA_API,
     OLLAMA_MODEL,
     OLLAMA_PROMPT_LANGUAGE,
