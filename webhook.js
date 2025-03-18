@@ -22,8 +22,8 @@ export function gitlabWebhook(projectID, mergeRequestID) {
     });
 
     logger.info('Ollama code analysis starting...');
-    requestLLM(diffs).then(llmOutput => {
-      createMergeRequestComment(projectID, mergeRequestID, llmOutput.response);
+    requestLLM(diffs).then(async (llmOutput) => {
+      return await createMergeRequestComment(projectID, mergeRequestID, llmOutput.response);
     });
   });
 }
@@ -43,7 +43,7 @@ export async function githubWebhook(prNumber) {
     });
     logger.info('Ollama code analysis starting...');
     requestLLM(fullPatches).then(async (llmOutput) => {
-      await createPullRequestComment(prNumber, llmOutput.response);
+      return await createPullRequestComment(prNumber, llmOutput.response);
     });
     
   });
