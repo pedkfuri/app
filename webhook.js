@@ -23,8 +23,8 @@ export function gitlabWebhook(projectID, mergeRequestID) {
 
     logger.info('Ollama code analysis starting...');
     requestLLM(diffs).then(async (llmOutput) => {
-      return await createMergeRequestComment(projectID, mergeRequestID, llmOutput.response);
-    });
+      return await createMergeRequestComment(projectID, mergeRequestID, llmOutput.response).catch((error) => logger.error('An error occurred while creating comment.', error));
+    }).catch((error) => logger.error('An error occurred while trying to reach Ollama.', error));
   });
 }
 
@@ -43,8 +43,8 @@ export async function githubWebhook(prNumber) {
     });
     logger.info('Ollama code analysis starting...');
     requestLLM(fullPatches).then(async (llmOutput) => {
-      return await createPullRequestComment(prNumber, llmOutput.response);
-    });
+      return await createPullRequestComment(prNumber, llmOutput.response).catch((error) => logger.error('An error occurred while creating comment.', error));
+    }).catch((error) => logger.error('An error occurred while trying to reach Ollama.', error));
     
   });
 }
