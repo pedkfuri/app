@@ -28,14 +28,15 @@ httpServer.post('/webhook', (req, res) => {
     logger.info('Triggered Gitlab Webhook');
     if (!req.body || !req.body.object_attributes || !req.body.project || !req.body.object_attributes.iid || !req.body.project.id) {
       res.status(422).send('Event cannot be processed');
-      if (req.body.pull_request.state !== 'open') return logger.error('MR in unprocessable state');
       return logger.error('Event cannot be processed');
-    }
-    const projectID = req.body.object_attributes.iid;
-    const mergeRequestID = req.body.project.id;
+    } else {
+      if (req.body.pull_request.state !== 'open') return logger.error('MR in unprocessable state');
+      const projectID = req.body.object_attributes.iid;
+      const mergeRequestID = req.body.project.id;
 
-    gitlabWebhook(projectID, mergeRequestID).then(webhookReturn => logger.info(webhookReturn)).catch(error => logger.error(error));
-    res.status(200).send('Gitlab code fetched and analysed.');
+      gitlabWebhook(projectID, mergeRequestID);
+      res.status(200).send('Gitlab code fetched and analysed.');
+    }
   }
 
   if (SERVICE.match('github')) {
@@ -43,12 +44,13 @@ httpServer.post('/webhook', (req, res) => {
     
     if (!req.body || !req.body.pull_request || !req.body.number) {
       res.status(422).send('Event cannot be processed');
-      if (req.body.pull_request.state !== 'open') return logger.error('PR in unprocessable state');
       return logger.error('Event cannot be processed');
+    } else {
+      if (req.body.pull_request.state !== 'open') return logger.error('PR in unprocessable state');
+      const prNumber = req.body.number;
+      githubWebhook(prNumber);
+      res.status(200).send('Webhook event processed.');
     }
-    const prNumber = req.body.number;
-    githubWebhook(prNumber).then(webhookReturn => logger.info(webhookReturn)).catch(error => logger.error(error));
-    res.status(200).send('Webhook event processed.');
   }
 });
 
