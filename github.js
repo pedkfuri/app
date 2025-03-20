@@ -23,8 +23,8 @@ export async function createGithubWebhook(webhookUrl) {
     events: ["pull_request"],
     active: true
   }).then(() => {
-    logger.info("Webhook created.");
-  }).catch(error => logger.error("Error creating webhook:", error));
+    logger.info("Webhook created");
+  }).catch(error => logger.error("Error creating webhook:", error.response.data.errors[0]));
 }
 
 /**
