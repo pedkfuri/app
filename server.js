@@ -30,8 +30,8 @@ httpServer.post('/webhook', (req, res) => {
       res.status(422).send('Event cannot be processed');
       return logger.error('Event cannot be processed');
     } else {
-      const projectID = req.body.object_attributes.iid;
-      const mergeRequestID = req.body.project.id;
+      const projectID = req.body.project.id;
+      const mergeRequestID = req.body.object_attributes.iid;
 
       gitlabWebhook(projectID, mergeRequestID);
       res.status(200).send('Gitlab code fetched and analysed.');

@@ -1,6 +1,5 @@
 import { createMergeRequestComment, getMergeRequestChanges } from './gitlab.js';
 import { createPullRequestComment, getPullRequestDiffContent } from './github.js';
-import { WEBHOOK_USERNAME } from './constants.js';
 import { requestLLM } from './ollama.js';
 import { logger } from './logger.js';
 
@@ -14,7 +13,7 @@ import { logger } from './logger.js';
  */
 export function gitlabWebhook(projectID, mergeRequestID) {
   getMergeRequestChanges(projectID, mergeRequestID).then(async (changes) => {
-    if (!changes || changes.length < 1) return logger.error(`MR event not assigned to ${WEBHOOK_USERNAME} or in unprocessable state`);
+    if (!changes || changes.length < 1) return logger.error(`Cannot retrieve MR changes`);
     let diffs = '';
 
     changes.forEach((change, index) => {
@@ -25,7 +24,7 @@ export function gitlabWebhook(projectID, mergeRequestID) {
     requestLLM(diffs).then(async (llmOutput) => {
       return await createMergeRequestComment(projectID, mergeRequestID, llmOutput.response).catch((error) => logger.error('An error occurred while creating comment.', error));
     }).catch((error) => logger.error('An error occurred while trying to reach Ollama.', error));
-  });
+  }).catch(error => logger.error(error));
 }
 
 /**
@@ -46,5 +45,5 @@ export async function githubWebhook(prNumber) {
       return await createPullRequestComment(prNumber, llmOutput.response).catch((error) => logger.error('An error occurred while creating comment.', error));
     }).catch((error) => logger.error('An error occurred while trying to reach Ollama.', error));
     
-  });
+  }).catch(error => logger.error(error));
 }
