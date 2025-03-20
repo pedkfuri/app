@@ -15,8 +15,5 @@ if (SERVICE.match('github')) {
 }
 
 //TODO: unit tests
-//TODO: error handling: /webhook request with wrong payload, ollama timeout, duplicate comment/MR or PR event
-//TODO: get only open MR/PR, assigned to the webhook user, accept or reject MR/PR
 //TODO: AI classify if code is good to approve or not
 //TODO: check patch/diff content constraints (too large, too many symbols etc)
-//TODO: avoid github webhook duplication
