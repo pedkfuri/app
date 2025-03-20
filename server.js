@@ -30,7 +30,6 @@ httpServer.post('/webhook', (req, res) => {
       res.status(422).send('Event cannot be processed');
       return logger.error('Event cannot be processed');
     } else {
-      if (req.body.pull_request.state !== 'open') return logger.error('MR in unprocessable state');
       const projectID = req.body.object_attributes.iid;
       const mergeRequestID = req.body.project.id;
 
