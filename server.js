@@ -6,7 +6,7 @@ import { PORT, HOSTNAME, SERVICE } from './constants.js';
 
 export const httpServer = express();
 
-httpServer.use(express.json());
+httpServer.use(express.json(), cors());
 
 /**
  * Starts an HTTP server and listens on the specified port.
@@ -52,11 +52,6 @@ httpServer.post('/webhook', (req, res) => {
     }
   }
 });
-
-httpServer.use(cors({
-  origin: ['http://localhost:*']
-}));
-
 
 httpServer.use((req, res) => {
   res.status(404);
