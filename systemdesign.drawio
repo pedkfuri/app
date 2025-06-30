@@ -1,0 +1,83 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36" version="26.1.3">
+  <diagram id="diagram1" name="System Design">
+    <mxGraphModel dx="1434" dy="754" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="tcc" value="&lt;b&gt;Webhook App&lt;/b&gt;" style="shape=rectangle;whiteSpace=wrap;html=1;fontSize=12;strokeColor=#000000;fillColor=#DAE8FC;" parent="1" vertex="1">
+          <mxGeometry x="300" y="360" width="180" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="ollama" value="&lt;b&gt;Ollama (LLM Service)&lt;/b&gt;" style="shape=rectangle;whiteSpace=wrap;html=1;fontSize=12;strokeColor=#000000;fillColor=#E1D5E7;" parent="1" vertex="1">
+          <mxGeometry x="10" y="360" width="150" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="github" value="&lt;b&gt;GitHub API&lt;/b&gt;" style="shape=rectangle;whiteSpace=wrap;html=1;fontSize=12;strokeColor=#000000;fillColor=#FFE6CC;" parent="1" vertex="1">
+          <mxGeometry x="800" y="500" width="180" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="gitlab" value="&lt;b&gt;GitLab API&lt;/b&gt;" style="shape=rectangle;whiteSpace=wrap;html=1;fontSize=12;strokeColor=#000000;fillColor=#FFF2CC;" parent="1" vertex="1">
+          <mxGeometry x="800" y="360" width="180" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" value="REST Request" style="edgeStyle=elbowEdgeStyle;rounded=0;endArrow=classic;html=1;fontSize=10;" parent="1" source="tcc" target="ollama" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" value="GET /pulls/{pull_number}/files" style="edgeStyle=elbowEdgeStyle;rounded=0;endArrow=classic;html=1;fontSize=10;elbow=vertical;" parent="1" source="tcc" target="github" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="440" as="sourcePoint" />
+            <mxPoint x="100" y="440" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="730" y="550" />
+              <mxPoint x="620" y="520" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge3" value="GET /{id}/merge_requests/{iid}/changes" style="edgeStyle=elbowEdgeStyle;rounded=0;endArrow=classic;html=1;fontSize=10;" parent="1" source="tcc" target="gitlab" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="480" y="409.5" as="sourcePoint" />
+            <mxPoint x="800" y="409.5" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="615" y="409.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="edge4" value="&lt;span style=&quot;font-weight: normal;&quot;&gt;POST /api/generate&lt;/span&gt;" style="edgeStyle=elbowEdgeStyle;rounded=0;dashed=1;endArrow=none;html=1;fontSize=10;startFill=0;fontStyle=1" parent="1" source="ollama" target="tcc" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Aqxi0CNXT2dAzifNdGKc-4" value="POST&amp;nbsp;/pulls/{pull_number}/comments" style="edgeStyle=elbowEdgeStyle;rounded=0;endArrow=classic;html=1;fontSize=10;" parent="1" source="tcc" target="github" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="310" y="480" as="sourcePoint" />
+            <mxPoint x="100" y="470" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="660" y="580" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Aqxi0CNXT2dAzifNdGKc-9" value="POST /{id}/merge_requests/{merge_request_iid}/notes" style="edgeStyle=elbowEdgeStyle;rounded=0;endArrow=classic;html=1;fontSize=10;" parent="1" source="tcc" target="gitlab" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="480" y="440" as="sourcePoint" />
+            <mxPoint x="800" y="440" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="620" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YYZIc5rYg6FeXmIfvs7G-1" value="POST /webhook" style="edgeStyle=elbowEdgeStyle;rounded=0;endArrow=classic;html=1;fontSize=10;" edge="1" parent="1" source="gitlab" target="tcc">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="480" y="380" as="sourcePoint" />
+            <mxPoint x="800" y="380" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="615" y="379.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="YYZIc5rYg6FeXmIfvs7G-2" value="POST /webhook" style="edgeStyle=elbowEdgeStyle;rounded=0;endArrow=classic;html=1;fontSize=10;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="800" y="520" as="sourcePoint" />
+            <mxPoint x="480" y="520" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="615" y="519.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
